@@ -5,6 +5,7 @@ export default defineConfig({
   test: {
     environment: "node",
     include: ["tests/**/*.test.ts"],
+    exclude: ["tests/e2e/**"],
     globals: false,
   },
   resolve: { alias: { "@": path.resolve(__dirname, ".") } },
