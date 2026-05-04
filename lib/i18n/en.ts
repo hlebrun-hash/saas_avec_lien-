@@ -1,0 +1,46 @@
+export const en = {
+  brand: { tagline: "Find creators who actually fit your brand." },
+  nav: { search: "Search", shortlists: "Shortlists", settings: "Settings", pricing: "Pricing" },
+  landing: {
+    heroTitle: "Paste your URL. Get the right creators.",
+    heroSubtitle: "We analyze your site, infer your niche & audience, and rank influencers across Instagram, TikTok, YouTube, X, and Twitch.",
+    cta: "Analyze my site",
+    placeholder: "https://your-store.com",
+    proofTitle: "Built for solo founders, agencies, and brand teams.",
+  },
+  search: {
+    title: "Find creators",
+    submit: "Analyze",
+    analyzing: "Analyzing your site…",
+    failed: "Analysis failed. Please check the URL and try again.",
+    filtersTitle: "Filters",
+    platform: "Platforms",
+    followerRange: "Followers",
+    minEngagement: "Min engagement rate",
+    country: "Country",
+    language: "Language",
+    category: "Category",
+    activeWithin: "Active within",
+    save: "Save to shortlist",
+    saved: "Saved",
+    score: "Match score",
+    contactLocked: "Upgrade to unlock contact info",
+  },
+  shortlists: { title: "Shortlists", export: "Export CSV", empty: "No shortlists yet." },
+  pricing: {
+    title: "Simple pricing",
+    free: "Free", pro: "Pro", agency: "Agency",
+    freeBlurb: "3 analyses/month, top 10 creators",
+    proBlurb: "50 analyses/month, all creators, CSV export, contact info",
+    agencyBlurb: "Unlimited analyses, multi-seat, API access",
+    upgrade: "Upgrade",
+  },
+  errors: {
+    invalidUrl: "Please enter a valid http(s) URL.",
+    rateLimited: "You're going too fast. Try again in a moment.",
+    quotaExceeded: "You've reached your plan's analysis quota. Upgrade to keep going.",
+    generic: "Something went wrong. Please try again.",
+  },
+} as const;
+
+export type Strings = typeof en;

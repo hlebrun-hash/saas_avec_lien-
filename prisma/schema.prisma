@@ -1,0 +1,139 @@
+// Prisma schema — InfluenceMatch
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Plan {
+  FREE
+  PRO
+  AGENCY
+}
+
+enum JobStatus {
+  PENDING
+  RUNNING
+  COMPLETED
+  FAILED
+}
+
+enum Platform {
+  INSTAGRAM
+  TIKTOK
+  YOUTUBE
+  X
+  TWITCH
+}
+
+model User {
+  id              String         @id @default(cuid())
+  externalId      String?        @unique // Clerk user id
+  email           String         @unique
+  name            String?
+  plan            Plan           @default(FREE)
+  analysesUsed    Int            @default(0)
+  analysesResetAt DateTime       @default(now())
+  createdAt       DateTime       @default(now())
+  projects        Project[]
+  shortlists      Shortlist[]
+  subscription    Subscription?
+}
+
+model Project {
+  id        String         @id @default(cuid())
+  userId    String
+  name      String
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  jobs      AnalysisJob[]
+  shortlists Shortlist[]
+  createdAt DateTime       @default(now())
+
+  @@index([userId])
+}
+
+model AnalysisJob {
+  id          String     @id @default(cuid())
+  projectId   String?
+  project     Project?   @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  url         String
+  urlHash     String     @db.VarChar(64)
+  status      JobStatus  @default(PENDING)
+  error       String?
+  signals     Json?      // { niche, sub_niches, audience, brand_tone, price_tier, keywords }
+  latencyMs   Int?
+  tokenCost   Int?       @default(0)
+  matchCount  Int?       @default(0)
+  createdAt   DateTime   @default(now())
+  completedAt DateTime?
+
+  @@index([urlHash])
+  @@index([status])
+}
+
+model Creator {
+  id                String     @id @default(cuid())
+  handle            String
+  platform          Platform
+  displayName       String
+  bio               String?
+  avatarUrl         String?
+  followers         Int
+  avgViews          Int
+  engagementRate    Float      // 0..1
+  country           String     // ISO 3166-1 alpha-2
+  language          String     // ISO 639-1
+  categories        String[]   // ["wine", "food"]
+  keywords          String[]   // tokenized topical keywords for matching
+  recentPostAt      DateTime
+  brandSafetyScore  Float      // 0..1
+  contactEmail      String?
+  createdAt         DateTime   @default(now())
+
+  shortlistEntries  ShortlistEntry[]
+
+  @@unique([platform, handle])
+  @@index([platform])
+  @@index([country])
+}
+
+model Shortlist {
+  id        String           @id @default(cuid())
+  userId    String
+  projectId String?
+  name      String
+  createdAt DateTime         @default(now())
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project   Project?         @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  entries   ShortlistEntry[]
+
+  @@index([userId])
+}
+
+model ShortlistEntry {
+  id          String    @id @default(cuid())
+  shortlistId String
+  creatorId   String
+  note        String?
+  scoreSnapshot Json?
+  addedAt     DateTime  @default(now())
+  shortlist   Shortlist @relation(fields: [shortlistId], references: [id], onDelete: Cascade)
+  creator     Creator   @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+
+  @@unique([shortlistId, creatorId])
+}
+
+model Subscription {
+  id                   String   @id @default(cuid())
+  userId               String   @unique
+  stripeCustomerId     String?  @unique
+  stripeSubscriptionId String?  @unique
+  stripePriceId        String?
+  plan                 Plan     @default(FREE)
+  status               String   @default("active")
+  currentPeriodEnd     DateTime?
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
