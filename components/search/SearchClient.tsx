@@ -58,17 +58,25 @@ export function SearchClient({ initialUrl }: { initialUrl: string }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ url }),
       });
-      const j = await r.json();
+      let j: { ok: boolean; data?: { jobId: string }; message?: string };
+      try {
+        j = await r.json();
+      } catch {
+        // Server returned non-JSON (HTML 500) — show HTTP status
+        setPhase("error");
+        setErrorMsg(`Server error (HTTP ${r.status}). Check terminal for details.`);
+        return;
+      }
       if (!j.ok) {
         setPhase("error");
         setErrorMsg(j.message ?? t.search.failed);
         return;
       }
-      setJobId(j.data.jobId);
+      setJobId(j.data!.jobId);
       setPhase("polling");
-    } catch {
+    } catch (e) {
       setPhase("error");
-      setErrorMsg(t.errors.generic);
+      setErrorMsg(`Network error: ${(e as Error).message}`);
     }
   }, []);
 
