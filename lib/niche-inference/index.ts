@@ -1,4 +1,4 @@
-import Anthropic from "@anthropic-ai/sdk";
+import { Mistral } from "@mistralai/mistralai";
 import type { ExtractedSite } from "@/lib/scraper";
 import { brandSignalsSchema, type BrandSignals } from "./schema";
 import { NICHE_INFERENCE_SYSTEM, buildUserPrompt } from "./prompt";
@@ -6,11 +6,11 @@ import { stubInfer } from "./stub";
 
 export interface InferResult {
   signals: BrandSignals;
-  source: "claude" | "stub";
+  source: "mistral" | "stub";
   tokenCost: number;
 }
 
-const MODEL = process.env.ANTHROPIC_MODEL ?? "claude-sonnet-4-6";
+const MODEL = process.env.MISTRAL_MODEL ?? "mistral-small-latest";
 
 function extractJsonObject(text: string): unknown {
   const trimmed = text.trim();
@@ -25,27 +25,29 @@ function extractJsonObject(text: string): unknown {
 }
 
 export async function inferBrandSignals(site: ExtractedSite): Promise<InferResult> {
-  const apiKey = process.env.ANTHROPIC_API_KEY;
+  const apiKey = process.env.MISTRAL_API_KEY;
   if (!apiKey) {
     return { signals: stubInfer(site), source: "stub", tokenCost: 0 };
   }
-  const client = new Anthropic({ apiKey });
+  const client = new Mistral({ apiKey });
   try {
-    const res = await client.messages.create({
+    const res = await client.chat.complete({
       model: MODEL,
-      max_tokens: 1500,
-      system: NICHE_INFERENCE_SYSTEM,
-      messages: [{ role: "user", content: buildUserPrompt(site) }],
+      maxTokens: 1500,
+      messages: [
+        { role: "system", content: NICHE_INFERENCE_SYSTEM },
+        { role: "user", content: buildUserPrompt(site) },
+      ],
     });
-    const block = res.content.find((b) => b.type === "text");
-    if (!block || block.type !== "text") throw new Error("No text block in Claude response.");
-    const parsed = extractJsonObject(block.text);
+    const block = res.choices?.[0]?.message?.content;
+    if (!block || typeof block !== "string") throw new Error("No text content in Mistral response.");
+    const parsed = extractJsonObject(block);
     const signals = brandSignalsSchema.parse(parsed);
-    const tokenCost = (res.usage?.input_tokens ?? 0) + (res.usage?.output_tokens ?? 0);
-    return { signals, source: "claude", tokenCost };
+    const tokenCost = (res.usage?.promptTokens ?? 0) + (res.usage?.completionTokens ?? 0);
+    return { signals, source: "mistral", tokenCost };
   } catch (e) {
     // Fall back to stub on any model/parse error so the pipeline never hard-crashes the user request.
-    console.warn("[niche-inference] Claude call failed, using stub:", (e as Error).message);
+    console.warn("[niche-inference] Mistral call failed, using stub:", (e as Error).message);
     return { signals: stubInfer(site), source: "stub", tokenCost: 0 };
   }
 }

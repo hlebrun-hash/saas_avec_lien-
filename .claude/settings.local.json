@@ -1,7 +1,14 @@
 {
   "permissions": {
     "allow": [
-      "Bash(git add *)"
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git commit *)",
+      "Bash(pnpm test *)",
+      "Bash(where pnpm *)",
+      "Bash(pnpm --version)",
+      "Bash(npm --version)",
+      "Bash(node_modules/.bin/vitest run *)"
     ]
   }
 }
