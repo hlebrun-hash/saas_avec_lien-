@@ -21,7 +21,7 @@ export function URLInputForm({
         e.preventDefault();
         if (url.trim()) onSubmit(url.trim());
       }}
-      className="flex gap-3 items-stretch"
+      className="flex flex-col sm:flex-row gap-4 items-stretch w-full max-w-3xl mx-auto"
       aria-label="Analyze URL"
     >
       <Input
@@ -29,13 +29,14 @@ export function URLInputForm({
         value={url}
         onChange={(e) => setUrl(e.target.value)}
         placeholder={t.landing.placeholder}
-        className="flex-1 h-11"
+        className="flex-1 h-14 text-lg"
         aria-label="Website URL"
         required
       />
-      <Button type="submit" disabled={disabled} size="lg">
+      <Button type="submit" disabled={disabled} size="lg" className="h-14 px-8 text-lg">
         {disabled ? "…" : t.search.submit}
       </Button>
     </form>
+
   );
 }

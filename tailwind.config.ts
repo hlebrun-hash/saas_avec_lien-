@@ -12,16 +12,64 @@ const config: Config = {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
-        primary: { DEFAULT: "hsl(var(--primary))", foreground: "hsl(var(--primary-foreground))" },
-        secondary: { DEFAULT: "hsl(var(--secondary))", foreground: "hsl(var(--secondary-foreground))" },
-        destructive: { DEFAULT: "hsl(var(--destructive))", foreground: "hsl(var(--destructive-foreground))" },
-        muted: { DEFAULT: "hsl(var(--muted))", foreground: "hsl(var(--muted-foreground))" },
-        accent: { DEFAULT: "hsl(var(--accent))", foreground: "hsl(var(--accent-foreground))" },
-        card: { DEFAULT: "hsl(var(--card))", foreground: "hsl(var(--card-foreground))" },
+        canvas: "#F7F4EB",
+        sunset: "#E86A47",
+        ocean: "#2A7B88",
+        ink: "#2C221B",
+        body: "#5A4C40",
+        "surface-sand": "#E3D5C8",
+        primary: {
+          DEFAULT: "#E86A47", // sunset
+          foreground: "#FFFFFF",
+        },
+        secondary: {
+          DEFAULT: "#2A7B88", // ocean
+          foreground: "#FFFFFF",
+        },
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
+        },
+        muted: {
+          DEFAULT: "#8B7E74",
+          foreground: "#F7F4EB",
+        },
+        accent: {
+          DEFAULT: "#E3D5C8",
+          foreground: "#2C221B",
+        },
+        card: {
+          DEFAULT: "#FFFFFF",
+          foreground: "#2C221B",
+        },
       },
-      borderRadius: { lg: "var(--radius)", md: "calc(var(--radius) - 2px)", sm: "calc(var(--radius) - 4px)" },
+      fontFamily: {
+        display: ["Clash Display", "sans-serif"],
+        sans: ["Satoshi", "sans-serif"],
+      },
+      borderRadius: {
+        none: "0px",
+        sm: "8px",
+        md: "12px",
+        lg: "16px",
+        full: "9999px",
+      },
+      boxShadow: {
+        soft: "0 4px 12px rgba(44, 34, 27, 0.04)",
+        floating: "0 12px 40px rgba(44, 34, 27, 0.08)",
+      },
+      animation: {
+        "reveal-up": "reveal-up 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards",
+      },
+      keyframes: {
+        "reveal-up": {
+          "0%": { opacity: "0", transform: "translateY(30px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],
 };
 export default config;
+

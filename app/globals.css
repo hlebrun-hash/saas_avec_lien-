@@ -1,49 +1,52 @@
+@import url('https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&f[]=satoshi@400,500,700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
+    --background: 48 40% 94%; /* #F7F4EB */
+    --foreground: 24 24% 14%; /* #2C221B */
     --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
-    --primary: 262 83% 58%;
+    --card-foreground: 24 24% 14%;
+    --popover: 48 40% 94%;
+    --popover-foreground: 24 24% 14%;
+    --primary: 13 80% 59%; /* #E86A47 - Sunset */
     --primary-foreground: 0 0% 100%;
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
+    --secondary: 189 53% 35%; /* #2A7B88 - Ocean */
+    --secondary-foreground: 0 0% 100%;
+    --muted: 27 10% 50%; /* #8B7E74 */
+    --muted-foreground: 27 10% 50%;
+    --accent: 30 24% 84%; /* #E3D5C8 - Sand */
+    --accent-foreground: 24 24% 14%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 262 83% 58%;
-    --radius: 0.5rem;
-  }
-  .dark {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 240 10% 5%;
-    --card-foreground: 0 0% 98%;
-    --primary: 262 83% 65%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 262 83% 65%;
+    --border: 30 24% 84%;
+    --input: 30 24% 84%;
+    --ring: 13 80% 59%;
+    --radius: 8px;
   }
 }
+
 @layer base {
-  * { @apply border-border; }
-  body { @apply bg-background text-foreground antialiased; }
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-canvas text-ink antialiased font-sans selection:bg-sunset selection:text-white;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display font-semibold tracking-tight text-ink;
+  }
+  p {
+    @apply text-body leading-relaxed;
+  }
 }
+
+@layer components {
+  .wow-reveal {
+    @apply opacity-0 translate-y-8 animate-reveal-up;
+  }
+}
+

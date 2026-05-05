@@ -24,26 +24,31 @@ export function LandingHero() {
   }
 
   return (
-    <div className="text-center">
-      <h1 className="text-4xl md:text-6xl font-bold tracking-tight">{t.landing.heroTitle}</h1>
-      <p className="mt-6 text-lg text-muted-foreground max-w-2xl mx-auto">{t.landing.heroSubtitle}</p>
-      <form onSubmit={submit} className="mt-10 flex flex-col sm:flex-row gap-3 max-w-2xl mx-auto" aria-label="Analyze website URL">
+    <div className="text-center py-24 space-y-12">
+      <h1 className="text-6xl md:text-8xl font-display font-semibold tracking-tight text-ink leading-[1.05] animate-reveal-up">
+        {t.landing.heroTitle}
+      </h1>
+      <p className="text-xl md:text-2xl text-body max-w-3xl mx-auto leading-relaxed animate-reveal-up [animation-delay:200ms] opacity-0">
+        {t.landing.heroSubtitle}
+      </p>
+      <form onSubmit={submit} className="flex flex-col sm:flex-row gap-4 max-w-3xl mx-auto pt-8 animate-reveal-up [animation-delay:400ms] opacity-0" aria-label="Analyze website URL">
         <Input
           type="url"
           inputMode="url"
           placeholder={t.landing.placeholder}
           value={url}
           onChange={(e) => setUrl(e.target.value)}
-          className="flex-1 h-12 text-base"
+          className="flex-1 h-16 text-lg px-6 bg-white border-2 border-accent/50 focus:border-sunset"
           aria-label="Website URL"
           aria-invalid={!!error}
           required
         />
-        <Button type="submit" size="lg" className="h-12 px-8">
+        <Button type="submit" size="lg" className="h-16 px-12 text-lg font-bold">
           {t.landing.cta}
         </Button>
       </form>
-      {error && <p role="alert" className="mt-3 text-sm text-destructive">{error}</p>}
+      {error && <p role="alert" className="mt-4 text-sm font-semibold text-destructive">{error}</p>}
     </div>
+
   );
 }

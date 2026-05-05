@@ -22,47 +22,53 @@ export function FiltersPanel({ value, onChange }: { value: Filters; onChange: (f
   }
 
   return (
-    <aside className="w-full md:w-72 shrink-0 space-y-6 text-sm" aria-label={t.search.filtersTitle}>
-      <h2 className="font-semibold">{t.search.filtersTitle}</h2>
+    <aside className="w-full md:w-80 shrink-0 space-y-10 text-sm bg-white p-8 shadow-soft sticky top-32" aria-label={t.search.filtersTitle}>
+      <h2 className="font-display text-2xl font-bold text-ink mb-6">{t.search.filtersTitle}</h2>
 
-      <div>
-        <div className="mb-2 font-medium">{t.search.platform}</div>
+      <div className="space-y-4">
+        <div className="font-display text-sm font-bold uppercase tracking-wider text-muted">{t.search.platform}</div>
         <div className="flex flex-wrap gap-2">
           {PLATFORMS.map((p) => (
-            <label key={p} className="flex items-center gap-2 text-xs">
-              <Checkbox
-                checked={value.platforms.includes(p)}
-                onCheckedChange={() => onChange({ ...value, platforms: toggle(value.platforms, p) })}
-                aria-label={p}
-              />
+            <button
+              key={p}
+              type="button"
+              onClick={() => onChange({ ...value, platforms: toggle(value.platforms, p) })}
+              className={`px-3 py-2 rounded-sm border-2 text-xs font-bold transition-all ${
+                value.platforms.includes(p) 
+                ? "bg-sunset border-sunset text-white shadow-md scale-105" 
+                : "border-accent bg-canvas text-body hover:border-sunset/30"
+              }`}
+            >
               {p}
-            </label>
+            </button>
           ))}
         </div>
       </div>
 
-      <div>
-        <Label htmlFor="follmin" className="mb-2 block">{t.search.followerRange}</Label>
-        <div className="flex gap-2">
+      <div className="space-y-4">
+        <Label htmlFor="follmin" className="font-display text-sm font-bold uppercase tracking-wider text-muted">{t.search.followerRange}</Label>
+        <div className="flex gap-3">
           <Input
             id="follmin"
             type="number"
-            placeholder="min"
+            placeholder="Min"
             value={value.followersMin ?? ""}
+            className="h-10 text-xs"
             onChange={(e) => onChange({ ...value, followersMin: e.target.value ? Number(e.target.value) : undefined })}
           />
           <Input
             type="number"
-            placeholder="max"
+            placeholder="Max"
             value={value.followersMax ?? ""}
+            className="h-10 text-xs"
             onChange={(e) => onChange({ ...value, followersMax: e.target.value ? Number(e.target.value) : undefined })}
           />
         </div>
       </div>
 
-      <div>
-        <Label className="mb-2 block">
-          {t.search.minEngagement} ({((value.engagementMin ?? 0) * 100).toFixed(1)}%)
+      <div className="space-y-6">
+        <Label className="font-display text-sm font-bold uppercase tracking-wider text-muted block">
+          {t.search.minEngagement} <span className="text-sunset ml-1">{((value.engagementMin ?? 0) * 100).toFixed(1)}%</span>
         </Label>
         <Slider
           min={0}
@@ -70,19 +76,23 @@ export function FiltersPanel({ value, onChange }: { value: Filters; onChange: (f
           step={0.005}
           value={[value.engagementMin ?? 0]}
           onValueChange={([v]) => onChange({ ...value, engagementMin: v ?? 0 })}
+          className="py-2"
         />
       </div>
 
-      <div>
-        <div className="mb-2 font-medium">{t.search.country}</div>
-        <div className="flex flex-wrap gap-1">
+      <div className="space-y-4">
+        <div className="font-display text-sm font-bold uppercase tracking-wider text-muted">{t.search.country}</div>
+        <div className="flex flex-wrap gap-2">
           {COUNTRIES.map((c) => (
             <button
               key={c}
               type="button"
               onClick={() => onChange({ ...value, countries: toggle(value.countries, c) })}
-              className={`px-2 py-0.5 rounded border text-xs ${value.countries.includes(c) ? "bg-primary text-primary-foreground border-primary" : "border-input"}`}
-              aria-pressed={value.countries.includes(c)}
+              className={`w-10 h-10 flex items-center justify-center rounded-sm border-2 text-xs font-bold transition-all ${
+                value.countries.includes(c) 
+                ? "bg-ocean border-ocean text-white shadow-md scale-105" 
+                : "border-accent bg-canvas text-body hover:border-ocean/30"
+              }`}
             >
               {c}
             </button>
@@ -90,33 +100,19 @@ export function FiltersPanel({ value, onChange }: { value: Filters; onChange: (f
         </div>
       </div>
 
-      <div>
-        <div className="mb-2 font-medium">{t.search.language}</div>
-        <div className="flex flex-wrap gap-1">
-          {LANGS.map((c) => (
-            <button
-              key={c}
-              type="button"
-              onClick={() => onChange({ ...value, languages: toggle(value.languages, c) })}
-              className={`px-2 py-0.5 rounded border text-xs ${value.languages.includes(c) ? "bg-primary text-primary-foreground border-primary" : "border-input"}`}
-              aria-pressed={value.languages.includes(c)}
-            >
-              {c}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div>
-        <div className="mb-2 font-medium">{t.search.category}</div>
-        <div className="flex flex-wrap gap-1">
+      <div className="space-y-4">
+        <div className="font-display text-sm font-bold uppercase tracking-wider text-muted">{t.search.category}</div>
+        <div className="flex flex-wrap gap-2">
           {CATEGORIES.map((c) => (
             <button
               key={c}
               type="button"
               onClick={() => onChange({ ...value, categories: toggle(value.categories, c) })}
-              className={`px-2 py-0.5 rounded border text-xs ${value.categories.includes(c) ? "bg-primary text-primary-foreground border-primary" : "border-input"}`}
-              aria-pressed={value.categories.includes(c)}
+              className={`px-3 py-1.5 rounded-sm border-2 text-xs font-bold transition-all ${
+                value.categories.includes(c) 
+                ? "bg-ink border-ink text-white shadow-md" 
+                : "border-accent bg-canvas text-body hover:border-ink/30"
+              }`}
             >
               {c}
             </button>
@@ -124,15 +120,19 @@ export function FiltersPanel({ value, onChange }: { value: Filters; onChange: (f
         </div>
       </div>
 
-      <div>
-        <div className="mb-2 font-medium">{t.search.activeWithin}</div>
+      <div className="space-y-4">
+        <div className="font-display text-sm font-bold uppercase tracking-wider text-muted">{t.search.activeWithin}</div>
         <div className="flex gap-2">
           {RECENCY.map((r) => (
             <button
               key={r.v}
               type="button"
               onClick={() => onChange({ ...value, activeWithinDays: value.activeWithinDays === r.v ? undefined : r.v })}
-              className={`px-2 py-1 rounded border text-xs ${value.activeWithinDays === r.v ? "bg-primary text-primary-foreground border-primary" : "border-input"}`}
+              className={`flex-1 py-2 rounded-sm border-2 text-xs font-bold transition-all ${
+                value.activeWithinDays === r.v 
+                ? "bg-sunset border-sunset text-white" 
+                : "border-accent bg-canvas text-body"
+              }`}
             >
               {r.label}
             </button>
@@ -140,5 +140,6 @@ export function FiltersPanel({ value, onChange }: { value: Filters; onChange: (f
         </div>
       </div>
     </aside>
+
   );
 }

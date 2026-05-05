@@ -163,44 +163,72 @@ export function SearchClient({ initialUrl }: { initialUrl: string }) {
   }
 
   return (
-    <div className="container py-8 max-w-7xl">
-      <h1 className="text-2xl font-bold mb-4">{t.search.title}</h1>
-      <URLInputForm initial={initialUrl} onSubmit={startAnalysis} disabled={phase === "submitting" || phase === "polling"} />
-
-      {phase === "submitting" || phase === "polling" ? (
-        <div className="mt-8 text-center text-muted-foreground" role="status" aria-live="polite">
-          {t.search.analyzing}
+    <div className="container max-w-7xl pb-24">
+      <div className="py-20 text-center space-y-8">
+        <h1 className="text-5xl md:text-7xl font-display font-semibold tracking-tight text-ink max-w-4xl mx-auto leading-[1.1]">
+          {t.search.title}
+        </h1>
+        <p className="text-xl text-body max-w-2xl mx-auto">
+          {t.landing.subtitle}
+        </p>
+        <div className="pt-4">
+          <URLInputForm initial={initialUrl} onSubmit={startAnalysis} disabled={phase === "submitting" || phase === "polling"} />
         </div>
-      ) : null}
+      </div>
 
-      {phase === "error" && (
-        <div className="mt-8 text-center text-destructive" role="alert">
-          {errorMsg ?? t.search.failed}
-        </div>
-      )}
-
-      {phase === "ready" && results && (
-        <div className="mt-8 flex flex-col md:flex-row gap-8">
-          <FiltersPanel value={filters} onChange={setFilters} />
-          <div className="flex-1 space-y-3">
-            <div className="text-sm text-muted-foreground">
-              {results.total} matches · plan: <b>{results.plan}</b>
-              {results.truncatedByPlan && " (top-N gated by plan)"}
-            </div>
-            {results.items.map(({ creator, score }) => (
-              <CreatorCard
-                key={creator.id}
-                creator={creator}
-                score={score}
-                saved={savedIds.has(creator.id)}
-                onSave={() => handleSave(creator.id, score)}
-                contactInfoUnlocked={results.contactInfoUnlocked}
-              />
-            ))}
-            {!results.items.length && <p className="text-sm text-muted-foreground">No creators match these filters.</p>}
+      <div className="min-h-[400px]">
+        {phase === "submitting" || phase === "polling" ? (
+          <div className="flex flex-col items-center justify-center py-20 animate-pulse" role="status" aria-live="polite">
+            <div className="h-12 w-12 border-4 border-sunset border-t-transparent rounded-full animate-spin mb-4" />
+            <p className="text-lg font-medium text-body">{t.search.analyzing}</p>
           </div>
-        </div>
-      )}
+        ) : null}
+
+        {phase === "error" && (
+          <div className="max-w-md mx-auto mt-12 p-6 bg-destructive/10 border border-destructive/20 rounded-sm text-center" role="alert">
+            <p className="text-destructive font-semibold mb-2">Analysis failed</p>
+            <p className="text-sm text-destructive/80">{errorMsg ?? t.search.failed}</p>
+          </div>
+        )}
+
+        {phase === "ready" && results && (
+          <div className="mt-12 flex flex-col md:flex-row gap-12 items-start">
+            <FiltersPanel value={filters} onChange={setFilters} />
+            
+            <div className="flex-1 w-full space-y-6">
+              <div className="flex items-center justify-between border-b border-accent pb-4">
+                <div className="text-lg font-display font-bold text-ink">
+                  {results.total} <span className="text-muted font-sans font-medium text-sm ml-2">creators found</span>
+                </div>
+                <div className="text-sm font-medium px-3 py-1 bg-surface-sand rounded-sm text-ink">
+                  Plan: <span className="font-bold text-ocean uppercase">{results.plan}</span>
+                </div>
+              </div>
+
+              <div className="grid gap-6">
+                {results.items.map(({ creator, score }, idx) => (
+                  <div key={creator.id} style={{ animationDelay: `${idx * 100}ms` }}>
+                    <CreatorCard
+                      creator={creator}
+                      score={score}
+                      saved={savedIds.has(creator.id)}
+                      onSave={() => handleSave(creator.id, score)}
+                      contactInfoUnlocked={results.contactInfoUnlocked}
+                    />
+                  </div>
+                ))}
+              </div>
+
+              {!results.items.length && (
+                <div className="py-20 text-center border-2 border-dashed border-accent rounded-none">
+                  <p className="text-body font-medium">No creators match these filters.</p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
+
